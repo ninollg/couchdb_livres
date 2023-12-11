@@ -79,7 +79,6 @@ app.get('/livres/:idLivre/pages/:numPage', async (req, res) => {
 app.post('/livres', async (req, res) => {
   const nouveauLivre = req.body;
   const { value, error } = livreSchema.validate(nouveauLivre)
-  console.log(req.body)
   if (error == undefined) {
         res.status(500).json({ error: error.message });
   } else {
