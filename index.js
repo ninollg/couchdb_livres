@@ -5,7 +5,7 @@ const dbLivres = nano.db.use('api_livres');
 
 app.use(express.json());
 
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'))
 
 const livreSchema = Joi.object({
   _id: Joi.string().required(),
@@ -75,13 +75,17 @@ app.get('/livres/:idLivre/pages/:numPage', async (req, res) => {
   }
 });
 
+
 app.post('/livres', async (req, res) => {
   const nouveauLivre = req.body;
-  try {
+  const { value, error } = livreSchema.validate(nouveauLivre)
+  console.log(req.body)
+  if (error == undefined) {
+        res.status(500).json({ error: error.message });
+  } else {
     const response = await dbLivres.insert(nouveauLivre);
     res.json({ message: 'Livre ajouté avec succès', id: response.id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
   }
 });
 
@@ -111,6 +115,19 @@ app.delete('/livres/:numLivre', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+app.put('/livres', async (req, res) => {
+  const modifLivre = req.body;
+  const { value, error } = livreSchema.validate(modifLivre)
+  if (error == undefined) {
+    res.status(500).json({ error: error.message });
+} else {
+const response = await dbLivres.insert(modifLivre);
+res.json({ message: 'Livre mofidié avec succès', id: response.id });
+
+}});
+
 
 
 app.listen(8080, () => {
