@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const{LivresRoutes}=require("./app/router/LivresRoutes.js");
-app.use(LivresRoutes)
+const LivresRoutes =require("./app/router/LivresRoutes.js");
+app.use(LivresRoutes.LivresRouter)
 
 app.listen(8080, () => {
   console.log("Server started");
@@ -47,94 +47,94 @@ app.get("/", (req, res) => {
 // });
 
 
-app.get('/livres/:idLivre', async (req, res) => {
-  const livreId = req.params.idLivre;
-  try {
-    const livre = await dbLivres.get(livreId);
-    res.json(livre);
-  } catch (error) {
-    res.status(404).json({ error: 'Livre non trouvé' });
-  }
-});
+// app.get('/livres/:idLivre', async (req, res) => {
+//   const livreId = req.params.idLivre;
+//   try {
+//     const livre = await dbLivres.get(livreId);
+//     res.json(livre);
+//   } catch (error) {
+//     res.status(404).json({ error: 'Livre non trouvé' });
+//   }
+// });
 
-app.get('/livres/:idLivre/pages', async (req, res) => {
-  const livreId = req.params.idLivre;
-  try {
-    const livre = await dbLivres.get(livreId);
-    const pages = livre.pages || [];
-    res.json(pages);
-  } catch (error) {
-    res.status(404).json({ error: 'Livre non trouvé' });
-  }
-});
+// app.get('/livres/:idLivre/pages', async (req, res) => {
+//   const livreId = req.params.idLivre;
+//   try {
+//     const livre = await dbLivres.get(livreId);
+//     const pages = livre.pages || [];
+//     res.json(pages);
+//   } catch (error) {
+//     res.status(404).json({ error: 'Livre non trouvé' });
+//   }
+// });
 
-app.get('/livres/:idLivre/pages/:numPage', async (req, res) => {
-  const { idLivre, numPage } = req.params;
-  try {
-    const livre = await dbLivres.get(idLivre);
-    const pages = livre.pages;
-    const page = pages.find((p) => p.numero === parseInt(numPage, 10));
-    if (page) {
-      res.json(page);
-    } else {
-      res.status(404).json({ error: 'Page non trouvée' });
-    }
-  } catch (error) {
-    res.status(404).json({ error: 'Livre non trouvé' });
-  }
-});
-
-
-app.post('/livres', async (req, res) => {
-  const nouveauLivre = req.body;
-  const { value, error } = livreSchema.validate(nouveauLivre)
-  if (error == undefined) {
-        res.status(500).json({ error: error.message });
-  } else {
-    const response = await dbLivres.insert(nouveauLivre);
-    res.json({ message: 'Livre ajouté avec succès', id: response.id });
-
-  }
-});
+// app.get('/livres/:idLivre/pages/:numPage', async (req, res) => {
+//   const { idLivre, numPage } = req.params;
+//   try {
+//     const livre = await dbLivres.get(idLivre);
+//     const pages = livre.pages;
+//     const page = pages.find((p) => p.numero === parseInt(numPage, 10));
+//     if (page) {
+//       res.json(page);
+//     } else {
+//       res.status(404).json({ error: 'Page non trouvée' });
+//     }
+//   } catch (error) {
+//     res.status(404).json({ error: 'Livre non trouvé' });
+//   }
+// });
 
 
+// app.post('/livres', async (req, res) => {
+//   const nouveauLivre = req.body;
+//   const { value, error } = livreSchema.validate(nouveauLivre)
+//   if (error == undefined) {
+//         res.status(500).json({ error: error.message });
+//   } else {
+//     const response = await dbLivres.insert(nouveauLivre);
+//     res.json({ message: 'Livre ajouté avec succès', id: response.id });
 
-app.delete('/livres/:numLivre', async (req, res) => {
-  const numLivre = req.params.numLivre;
-
-  try {
-    const query = {
-      selector: {
-        numero: parseInt(numLivre, 10),
-      },
-      fields: ['_id', '_rev'],
-    };
-
-    const result = await dbLivres.find(query);
-
-    if (result.docs.length > 0) {
-      const livre = await dbLivres.get(result.docs[0]._id, { rev: result.docs[0]._rev });
-      await dbLivres.destroy(livre._id, livre._rev);
-      res.json({ message: 'Livre supprimé avec succès' });
-    } else {
-      res.status(404).json({ error: 'Livre non trouvé' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+//   }
+// });
 
 
-app.put('/livres', async (req, res) => {
-  const modifLivre = req.body;
-  const { value, error } = livreSchema.validate(modifLivre)
-  if (error == undefined) {
-    res.status(500).json({ error: error.message });
-} else {
-const response = await dbLivres.insert(modifLivre);
-res.json({ message: 'Livre mofidié avec succès', id: response.id });
 
-}});
+// app.delete('/livres/:numLivre', async (req, res) => {
+//   const numLivre = req.params.numLivre;
+
+//   try {
+//     const query = {
+//       selector: {
+//         numero: parseInt(numLivre, 10),
+//       },
+//       fields: ['_id', '_rev'],
+//     };
+
+//     const result = await dbLivres.find(query);
+
+//     if (result.docs.length > 0) {
+//       const livre = await dbLivres.get(result.docs[0]._id, { rev: result.docs[0]._rev });
+//       await dbLivres.destroy(livre._id, livre._rev);
+//       res.json({ message: 'Livre supprimé avec succès' });
+//     } else {
+//       res.status(404).json({ error: 'Livre non trouvé' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+
+// app.put('/livres', async (req, res) => {
+//   const modifLivre = req.body;
+//   const { value, error } = livreSchema.validate(modifLivre)
+//   if (error == undefined) {
+//     res.status(500).json({ error: error.message });
+// } else {
+// const response = await dbLivres.insert(modifLivre);
+// res.json({ message: 'Livre mofidié avec succès', id: response.id });
+
+// }});
 
 
 
