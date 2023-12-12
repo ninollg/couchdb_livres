@@ -39,7 +39,7 @@ const ajouterLivre = async (nouveauLivre) => {
 };
 
 const supprimerLivre = async (numLivre) => {
-    //   j'ai utilisé chatgpt pour le query
+    //   j'ai utilisé chatgpt pour ce query
   const query = {
     selector: {
       numero: parseInt(numLivre, 10),
