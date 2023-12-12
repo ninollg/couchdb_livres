@@ -1,26 +1,35 @@
 const express = require("express");
 const app = express();
-const nano = require('nano')('http://lln4432a:Lel!ege2003!@127.0.0.1:5984');
-const dbLivres = nano.db.use('api_livres');
-
 app.use(express.json());
+const{LivresRoutes}=require("./app/router/LivresRoutes.js");
+app.use(LivresRoutes)
 
-const Joi = require('joi').extend(require('@joi/date'))
-
-const livreSchema = Joi.object({
-  _id: Joi.string().required(),
-  _rev: Joi.string().required(),
-  titre: Joi.string().required(),
-  numero: Joi.number().integer().required(),
-  resume: Joi.string().required(),
-  pages: Joi.array().items(Joi.string()),
-  auteur: Joi.string().required(),
-  date: Joi.date().required(),
-  nombrePages: Joi.number().integer().required(),
-  isbn: Joi.number().integer().required(),
+app.listen(8080, () => {
+  console.log("Server started");
 });
 
-module.exports = livreSchema;
+
+// const nano = require('nano')('http://lln4432a:Lel!ege2003!@127.0.0.1:5984');
+// const dbLivres = nano.db.use('api_livres');
+
+
+
+// const Joi = require('joi').extend(require('@joi/date'))
+
+// const livreSchema = Joi.object({
+//   _id: Joi.string().required(),
+//   _rev: Joi.string().required(),
+//   titre: Joi.string().required(),
+//   numero: Joi.number().integer().required(),
+//   resume: Joi.string().required(),
+//   pages: Joi.array().items(Joi.string()),
+//   auteur: Joi.string().required(),
+//   date: Joi.date().required(),
+//   nombrePages: Joi.number().integer().required(),
+//   isbn: Joi.number().integer().required(),
+// });
+
+// module.exports = livreSchema;
 
 
 app.get("/", (req, res) => {
@@ -28,14 +37,14 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/livres", async(req, res) => {
-  const query = {
-      "selector": {},
-      "fields": ["titre"]
-  }
-  let liste = await dbLivres.find(query)
-  res.json(liste)
-});
+// app.get("/livres", async(req, res) => {
+//   const query = {
+//       "selector": {},
+//       "fields": ["titre"]
+//   }
+//   let liste = await dbLivres.find(query)
+//   res.json(liste)
+// });
 
 
 app.get('/livres/:idLivre', async (req, res) => {
@@ -129,6 +138,3 @@ res.json({ message: 'Livre mofidié avec succès', id: response.id });
 
 
 
-app.listen(8080, () => {
-  console.log("Server started");
-});
