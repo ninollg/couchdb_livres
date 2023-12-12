@@ -1,6 +1,22 @@
 const nano = require('nano')('http://lln4432a:Lel!ege2003!@127.0.0.1:5984');
 const dbLivres = nano.db.use('api_livres');
 
+const Joi = require('joi').extend(require('@joi/date'))
+
+const livreSchema = Joi.object({
+    _id: Joi.string(),
+    _rev: Joi.string(),
+    titre: Joi.string().required(),
+    numero: Joi.number().integer().required(),
+    resume: Joi.string().required(),
+    pages: Joi.array().items(Joi.string()),
+    auteur: Joi.string().required(),
+    date: Joi.date().required(),
+    nombrePages: Joi.number().integer().required(),
+    isbn: Joi.number().integer().required(),
+});
+
+module.exports = { livreSchema };
 const Livres = async () => {
   const query = {
     selector: {},

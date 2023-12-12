@@ -1,21 +1,6 @@
 const LivresModel = require("../model/LivresModel.js");
 
-const Joi = require('joi').extend(require('@joi/date'))
 
-const livreSchema = Joi.object({
-    _id: Joi.string().required(),
-    _rev: Joi.string().required(),
-    titre: Joi.string().required(),
-    numero: Joi.number().integer().required(),
-    resume: Joi.string().required(),
-    pages: Joi.array().items(Joi.string()),
-    auteur: Joi.string().required(),
-    date: Joi.date().required(),
-    nombrePages: Joi.number().integer().required(),
-    isbn: Joi.number().integer().required(),
-});
-
-module.exports = { livreSchema };
 
 const liste = async (req, res) => {
     try {
